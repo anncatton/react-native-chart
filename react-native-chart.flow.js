@@ -22,9 +22,9 @@ declare type Chart = {
 	xAxisHeight?: number,
 	yAxisTransform?: Function,
 	yAxisWidth?: number,
-	yAxisUseDecimal?: boolean,
 
 	// Bar chart props
+	barColors?: Array<number | string>,
 	color?: number | string,
 	cornerRadius?: number,
 	widthPercent?: number,

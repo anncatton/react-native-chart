@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import React, { Component } from 'react';
 import * as C from './constants';
 import Grid from './Grid';
+import numeral from 'numeral'
 
 const styles = StyleSheet.create({
 	default: {
@@ -27,8 +28,7 @@ export default class BarChart extends Component<void, any, any> {
 
 	_drawBar = (_dataPoint : [number, number], index : number) => {
 		const [_x, dataPoint] = _dataPoint;
-		const backgroundColor = this.props.color[0] || C.BLUE;
-		// the index [0] is facilitate multi-line, fix later if need be
+		const backgroundColor = (typeof this.props.barColors !== 'undefined' && this.props.barColors[index] ? this.props.barColors[index] : C.BLUE);
 		const HEIGHT = this.props.height;
 		const WIDTH = this.props.width;
 		let widthPercent = this.props.widthPercent || 0.5;
@@ -45,13 +45,20 @@ export default class BarChart extends Component<void, any, any> {
 		}
 
 		const data = this.props.data || [];
+
 		const width = (WIDTH / data.length * this.props.horizontalScale * 0.5) * widthPercent;
 		const divisor = (maxBound - minBound <= 0) ? 0.00001 : (maxBound - minBound);
 		const scale = HEIGHT / divisor;
 		let height = HEIGHT - ((minBound * scale) + (HEIGHT - (dataPoint * scale)));
-		if (height <= 0) height = 20;
+		// removed this because it incorrectly represented the last year of amortization, which is
+		// always 0 or 0.01
+		// if (height <= 0) height = 20;
+		const { xAxisTitle, xAxisUnit, accessibilityIndices, regularLabel } = this.props
+		const accessibleBarValue = (xAxisUnit === 'currency') ? numeral(dataPoint).format('$0,0.00') : dataPoint
+
 		return (
 			<TouchableWithoutFeedback
+				accessibilityLabel={`${regularLabel} ${ accessibilityIndices[index].option} ${xAxisTitle} ${accessibilityIndices[index].index}: ${accessibleBarValue}.`}
 				key={index}
 				onPress={(e) => this._handlePress(e, dataPoint, index)}
 			>
