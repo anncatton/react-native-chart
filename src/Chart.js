@@ -51,7 +51,7 @@ export default class Chart extends Component<void, any, any> {
 		showYAxisLabels: true,
 		tightBounds: false,
 		verticalGridStep: 4,
-		xAxisHeight: 20,
+		xAxisHeight: 25,
 		yAxisWidth: 30,
 		yMinBoundsToZero: false,
 	};
